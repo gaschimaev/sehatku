@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SehatKu – Sistem Kesehatan Masyarakat</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --green: #16a34a; --green-light: #22c55e; --green-pale: #f0fdf4;
+  --teal: #0d9488; --teal-pale: #f0fdfa;
+  --slate: #1e293b; --slate-mid: #475569; --slate-light: #94a3b8;
+  --white: #ffffff; --off-white: #f8fafc;
+  --red: #ef4444; --yellow: #f59e0b; --blue: #3b82f6;
+  --shadow: 0 4px 24px rgba(0,0,0,.08); --shadow-lg: 0 12px 40px rgba(0,0,0,.12);
+  --radius: 16px; --radius-sm: 10px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--off-white);color:var(--slate);min-height:100vh}
+/* ─── Nav ─────────────────────────── */
+nav{background:var(--white);border-bottom:1px solid #e2e8f0;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100}
+.logo{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--green);display:flex;align-items:center;gap:8px}
+.logo span{font-size:1.8rem}
+.nav-actions{display:flex;gap:10px;align-items:center}
+.btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;font-size:.875rem;font-weight:600;transition:all .2s}
+.btn-primary{background:var(--green);color:white}.btn-primary:hover{background:#15803d}
+.btn-outline{background:transparent;border:1.5px solid var(--green);color:var(--green)}.btn-outline:hover{background:var(--green-pale)}
+.btn-danger{background:var(--red);color:white}.btn-danger:hover{background:#dc2626}
+.btn-lg{padding:12px 28px;font-size:1rem;border-radius:12px}
+.btn-sm{padding:6px 12px;font-size:.8rem}
+/* ─── Hero ────────────────────────── */
+#hero{background:linear-gradient(135deg,#052e16 0%,#14532d 50%,#166534 100%);color:white;padding:80px 24px;text-align:center;position:relative;overflow:hidden}
+#hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:6px 16px;font-size:.8rem;font-weight:600;margin-bottom:20px;backdrop-filter:blur(8px)}
+#hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.5rem,6vw,4rem);margin-bottom:16px;line-height:1.1}
+#hero h1 em{color:#86efac;font-style:normal}
+#hero p{font-size:1.1rem;color:#bbf7d0;max-width:560px;margin:0 auto 36px;line-height:1.7}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.stats-bar{display:flex;gap:40px;justify-content:center;margin-top:56px;flex-wrap:wrap}
+.stat{text-align:center}.stat-num{font-family:'DM Serif Display',serif;font-size:2.2rem;color:#86efac}.stat-label{font-size:.8rem;color:#86efac;opacity:.8;margin-top:2px}
+/* ─── Sections ────────────────────── */
+.section{padding:60px 24px;max-width:1100px;margin:0 auto}
+.section-title{font-family:'DM Serif Display',serif;font-size:2rem;color:var(--slate);margin-bottom:8px}
+.section-sub{color:var(--slate-mid);margin-bottom:36px;font-size:.95rem}
+/* ─── Cards ───────────────────────── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.card{background:var(--white);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);border:1px solid #f1f5f9;transition:all .2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px}
+.card-icon.green{background:var(--green-pale)} .card-icon.teal{background:var(--teal-pale)} .card-icon.blue{background:#eff6ff}
+.card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.card p{color:var(--slate-mid);font-size:.9rem;line-height:1.6}
+.card-actions{margin-top:18px;display:flex;gap:8px}
+/* ─── Forms ───────────────────────── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:20px;padding:32px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal h2{font-family:'DM Serif Display',serif;font-size:1.6rem;margin-bottom:4px}
+.modal .sub{color:var(--slate-mid);font-size:.875rem;margin-bottom:24px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:.875rem;font-weight:600;color:var(--slate);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-family:inherit;font-size:.9rem;transition:border .2s;background:var(--off-white)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--green);background:white}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:10px;margin-top:8px}
+/* ─── Table ───────────────────────── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse;background:var(--white)}
+th{background:var(--off-white);padding:12px 16px;text-align:left;font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--slate-mid);border-bottom:1px solid #e2e8f0}
+td{padding:12px 16px;font-size:.875rem;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+tr:last-child td{border:none}
+/* ─── Badge ───────────────────────── */
+.badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:.75rem;font-weight:700}
+.badge-menunggu{background:#fef3c7;color:#92400e} .badge-dikonfirmasi{background:#dbeafe;color:#1e40af}
+.badge-selesai{background:#dcfce7;color:#166534} .badge-dibatalkan{background:#fee2e2;color:#991b1b}
+.badge-diproses{background:#fef3c7;color:#92400e} .badge-ditindaklanjuti{background:#dbeafe;color:#1e40af}
+/* ─── Alert ───────────────────────── */
+.alert{padding:12px 16px;border-radius:10px;font-size:.875rem;margin-bottom:16px;font-weight:500}
+.alert-success{background:#dcfce7;color:#166534;border:1px solid #bbf7d0}
+.alert-error{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+/* ─── Tabs ────────────────────────── */
+.tabs{display:flex;gap:4px;background:#f1f5f9;border-radius:12px;padding:4px;margin-bottom:28px}
+.tab{padding:8px 18px;border-radius:10px;border:none;background:transparent;cursor:pointer;font-family:inherit;font-size:.875rem;font-weight:600;color:var(--slate-mid);transition:all .2s}
+.tab.active{background:var(--white);color:var(--green);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+/* ─── Loading ─────────────────────── */
+.spinner{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:40px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+/* ─── Footer ──────────────────────── */
+footer{background:var(--slate);color:#94a3b8;text-align:center;padding:24px;font-size:.85rem;margin-top:60px}
+footer strong{color:white}
+/* ─── Monitoring Chart ────────────── */
+.chart-bar-wrap{display:flex;flex-direction:column;gap:10px}
+.chart-bar-row{display:flex;align-items:center;gap:12px;font-size:.875rem}
+.chart-bar-label{width:120px;font-weight:600;color:var(--slate);flex-shrink:0}
+.chart-bar-track{flex:1;background:#f1f5f9;border-radius:100px;height:24px;overflow:hidden}
+.chart-bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--green),var(--green-light));transition:width .8s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:white;font-size:.75rem;font-weight:700;min-width:24px}
+/* ─── Responsive ──────────────────── */
+@media(max-width:600px){.form-row{grid-template-columns:1fr}.stats-bar{gap:24px}.hero-cta{flex-direction:column;align-items:center}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo"><span>🏥</span> SehatKu</div>
+  <div class="nav-actions" id="navActions">
+    <button class="btn btn-outline" onclick="openModal('loginModal')">Masuk</button>
+    <button class="btn btn-primary" onclick="openModal('registerModal')">Daftar</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-badge">🌿 Sistem Kesehatan Masyarakat Digital</div>
+  <h1>Layanan Kesehatan <em>Lebih Mudah</em><br>untuk Semua</h1>
+  <p>Booking puskesmas, laporan kesehatan lingkungan, dan monitoring penyakit masyarakat dalam satu platform terintegrasi.</p>
+  <div class="hero-cta">
+    <button class="btn btn-primary btn-lg" onclick="openModal('registerModal')">🚀 Mulai Sekarang</button>
+    <button class="btn btn-lg" style="background:rgba(255,255,255,.15);color:white;border:1.5px solid rgba(255,255,255,.3)" onclick="scrollToFeatures()">Lihat Fitur</button>
+  </div>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num">3+</div><div class="stat-label">Puskesmas Terdaftar</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Layanan Online</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Data Aman</div></div>
+  </div>
+</section>
+
+<!-- FITUR -->
+<div class="section" id="features">
+  <h2 class="section-title">Fitur Unggulan</h2>
+  <p class="section-sub">Tiga pilar layanan kesehatan digital yang terhubung langsung dengan puskesmas terdekat.</p>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon green">📅</div>
+      <h3>Booking Puskesmas</h3>
+      <p>Daftarkan kunjungan ke puskesmas pilihan Anda secara online. Pilih tanggal, jenis layanan, dan ceritakan keluhan Anda.</p>
+      <div class="card-actions"><button class="btn btn-primary btn-sm" onclick="showSection('booking')">Buat Booking →</button></div>
+    </div>
+    <div class="card">
+      <div class="card-icon teal">📋</div>
+      <h3>Laporan Kesehatan</h3>
+      <p>Laporkan masalah kesehatan lingkungan di sekitar Anda. Bisa sertakan foto sebagai bukti laporan.</p>
+      <div class="card-actions"><button class="btn btn-primary btn-sm" onclick="showSection('laporan')">Buat Laporan →</button></div>
+    </div>
+    <div class="card">
+      <div class="card-icon blue">📊</div>
+      <h3>Monitoring Penyakit</h3>
+      <p>Pantau data penyebaran penyakit di wilayah Anda secara real-time. Data diperbarui oleh petugas kesehatan.</p>
+      <div class="card-actions"><button class="btn btn-primary btn-sm" onclick="showSection('monitoring')">Lihat Data →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="section" id="mainContent" style="display:none">
+  <div class="tabs">
+    <button class="tab active" onclick="showSection('booking')">📅 Booking Puskesmas</button>
+    <button class="tab" onclick="showSection('laporan')">📋 Laporan Kesehatan</button>
+    <button class="tab" onclick="showSection('monitoring')">📊 Monitoring Penyakit</button>
+    <button class="tab admin-tab hidden" onclick="showSection('admin')">⚙️ Admin</button>
+  </div>
+
+  <!-- BOOKING SECTION -->
+  <div id="sec-booking">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:gap">
+      <div><h2 class="section-title">Booking Puskesmas</h2><p class="section-sub">Pilih puskesmas dan jadwal kunjungan Anda</p></div>
+      <button class="btn btn-primary" onclick="openModal('bookingModal')">+ Buat Booking Baru</button>
+    </div>
+    <div id="myBookings"><div class="spinner"></div></div>
+  </div>
+
+  <!-- LAPORAN SECTION -->
+  <div id="sec-laporan" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div><h2 class="section-title">Laporan Kesehatan Lingkungan</h2><p class="section-sub">Laporan masalah kesehatan dari warga</p></div>
+      <button class="btn btn-primary" onclick="openModal('laporanModal')">+ Buat Laporan</button>
+    </div>
+    <div id="laporanList"><div class="spinner"></div></div>
+  </div>
+
+  <!-- MONITORING SECTION -->
+  <div id="sec-monitoring" class="hidden">
+    <h2 class="section-title">Monitoring Penyakit Masyarakat</h2>
+    <p class="section-sub">Data kasus penyakit per wilayah (diperbarui secara berkala)</p>
+    <div id="monitoringData"><div class="spinner"></div></div>
+  </div>
+
+  <!-- ADMIN SECTION -->
+  <div id="sec-admin" class="hidden">
+    <h2 class="section-title">Panel Admin</h2>
+    <p class="section-sub">Kelola booking dan tambah data monitoring</p>
+    <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="loadAdminBookings()">🔄 Refresh Booking</button>
+      <button class="btn btn-outline" onclick="openModal('monitoringModal')">+ Tambah Data Monitoring</button>
+    </div>
+    <div id="adminBookings"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════ MODALS ═══════════════ -->
+
+<!-- Login -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <h2>Selamat Datang 👋</h2>
+    <p class="sub">Masuk ke akun SehatKu Anda</p>
+    <div id="loginAlert"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="email@contoh.com"/></div>
+    <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="••••••••"/></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="doLogin()">Masuk</button>
+      <button class="btn btn-outline" onclick="closeModal('loginModal')">Batal</button>
+    </div>
+    <p style="text-align:center;margin-top:16px;font-size:.875rem;color:var(--slate-mid)">Belum punya akun? <a href="#" style="color:var(--green);font-weight:700" onclick="closeModal('loginModal');openModal('registerModal')">Daftar</a></p>
+  </div>
+</div>
+
+<!-- Register -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal">
+    <h2>Buat Akun Baru 🌿</h2>
+    <p class="sub">Bergabung dan nikmati layanan SehatKu</p>
+    <div id="registerAlert"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Nama Lengkap</label><input type="text" id="regNama" placeholder="Nama Anda"/></div>
+      <div class="form-group"><label>No. HP</label><input type="tel" id="regHp" placeholder="081234567890"/></div>
+    </div>
+    <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="email@contoh.com"/></div>
+    <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Min. 8 karakter"/></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="doRegister()">Daftar Sekarang</button>
+      <button class="btn btn-outline" onclick="closeModal('registerModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Booking -->
+<div class="modal-overlay" id="bookingModal">
+  <div class="modal">
+    <h2>Buat Booking 📅</h2>
+    <p class="sub">Daftarkan kunjungan ke puskesmas</p>
+    <div id="bookingAlert"></div>
+    <div class="form-group"><label>Pilih Puskesmas</label>
+      <select id="bookPuskesmas"><option value="">-- Pilih Puskesmas --</option></select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Tanggal Kunjungan</label><input type="date" id="bookTanggal"/></div>
+      <div class="form-group"><label>Jenis Layanan</label>
+        <select id="bookLayanan">
+          <option value="umum">Pemeriksaan Umum</option>
+          <option value="gigi">Poli Gigi</option>
+          <option value="kia">KIA / KB</option>
+          <option value="imunisasi">Imunisasi</option>
+          <option value="lab">Laboratorium</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Keluhan / Alasan Kunjungan</label>
+      <textarea id="bookKeluhan" placeholder="Ceritakan keluhan Anda..."></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="doBooking()">Kirim Booking</button>
+      <button class="btn btn-outline" onclick="closeModal('bookingModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Laporan -->
+<div class="modal-overlay" id="laporanModal">
+  <div class="modal">
+    <h2>Buat Laporan 📋</h2>
+    <p class="sub">Laporkan masalah kesehatan lingkungan</p>
+    <div id="laporanAlert"></div>
+    <div class="form-group"><label>Judul Laporan</label><input type="text" id="lapJudul" placeholder="Singkat dan jelas"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Kategori</label>
+        <select id="lapKategori">
+          <option value="sanitasi">Sanitasi</option>
+          <option value="wabah">Wabah Penyakit</option>
+          <option value="pencemaran">Pencemaran</option>
+          <option value="gizi">Gizi Buruk</option>
+          <option value="lainnya">Lainnya</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Lokasi</label><input type="text" id="lapLokasi" placeholder="RT/RW, Kelurahan"/></div>
+    </div>
+    <div class="form-group"><label>Deskripsi Lengkap</label>
+      <textarea id="lapDeskripsi" placeholder="Jelaskan masalah secara detail..." style="min-height:100px"></textarea>
+    </div>
+    <div class="form-group"><label>Upload Foto (Opsional)</label>
+      <input type="file" id="lapFoto" accept="image/*" style="padding:8px"/>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="doLaporan()">Kirim Laporan</button>
+      <button class="btn btn-outline" onclick="closeModal('laporanModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Monitoring Admin -->
+<div class="modal-overlay" id="monitoringModal">
+  <div class="modal">
+    <h2>Tambah Data Monitoring 📊</h2>
+    <p class="sub">Masukkan data kasus penyakit terbaru</p>
+    <div id="monitoringAlert"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Nama Penyakit</label><input type="text" id="monPenyakit" placeholder="contoh: DBD"/></div>
+      <div class="form-group"><label>Jumlah Kasus</label><input type="number" id="monJumlah" placeholder="0"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Wilayah</label><input type="text" id="monWilayah" placeholder="Nama Kecamatan"/></div>
+      <div class="form-group"><label>Tanggal</label><input type="date" id="monTanggal"/></div>
+    </div>
+    <div class="form-group"><label>Keterangan</label><textarea id="monKeterangan" placeholder="Catatan tambahan..."></textarea></div>
+    <div class="form-actions">
+      <button class="btn btn-primary" style="flex:1" onclick="doAddMonitoring()">Simpan Data</button>
+      <button class="btn btn-outline" onclick="closeModal('monitoringModal')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>SehatKu</strong> – Sistem Informasi Kesehatan Masyarakat &nbsp;|&nbsp; Dibangun dengan ☁️ AWS Cloud &nbsp;|&nbsp; EC2 · RDS · S3 · Docker
+</footer>
+
+<script>
+const API = window.location.hostname === 'localhost' ? 'http://localhost:5000' : '/api-url-here'; // ganti dengan IP EC2 Anda
+let token = localStorage.getItem('sehatku_token');
+let user = JSON.parse(localStorage.getItem('sehatku_user') || 'null');
+
+// ─── Modal ─────────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ─── Sections ──────────────────────────────────────────────────────────────
+function showSection(name) {
+  ['booking','laporan','monitoring','admin'].forEach(s => {
+    document.getElementById('sec-'+s)?.classList.add('hidden');
+  });
+  document.getElementById('sec-'+name)?.classList.remove('hidden');
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const map = ['booking','laporan','monitoring','admin'];
+    t.classList.toggle('active', map[i] === name);
+  });
+  if (name === 'booking') loadMyBookings();
+  if (name === 'laporan') loadLaporan();
+  if (name === 'monitoring') loadMonitoring();
+  if (name === 'admin') loadAdminBookings();
+}
+
+function scrollToFeatures() {
+  document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ─── Auth UI ───────────────────────────────────────────────────────────────
+function updateNav() {
+  const nav = document.getElementById('navActions');
+  if (user) {
+    nav.innerHTML = `<span style="font-size:.875rem;color:var(--slate-mid)">Halo, <strong>${user.nama}</strong></span>
+      <button class="btn btn-outline btn-sm" onclick="showMain()">Dashboard</button>
+      <button class="btn btn-danger btn-sm" onclick="doLogout()">Keluar</button>`;
+    if (user.role === 'admin') document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('hidden'));
+  } else {
+    nav.innerHTML = `<button class="btn btn-outline" onclick="openModal('loginModal')">Masuk</button>
+      <button class="btn btn-primary" onclick="openModal('registerModal')">Daftar</button>`;
+    document.querySelectorAll('.admin-tab').forEach(el => el.classList.add('hidden'));
+  }
+}
+
+function showMain() {
+  document.getElementById('hero').style.display = 'none';
+  document.getElementById('features').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'block';
+  showSection('booking');
+}
+
+function doLogout() {
+  token = null; user = null;
+  localStorage.removeItem('sehatku_token'); localStorage.removeItem('sehatku_user');
+  location.reload();
+}
+
+// ─── API Helper ────────────────────────────────────────────────────────────
+async function api(path, opts = {}) {
+  const headers = { ...opts.headers };
+  if (!(opts.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const res = await fetch(API + path, { ...opts, headers });
+  return res;
+}
+
+function showAlert(id, msg, type='error') {
+  const el = document.getElementById(id);
+  if (el) { el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`; setTimeout(() => el.innerHTML='', 4000); }
+}
+
+// ─── Register ──────────────────────────────────────────────────────────────
+async function doRegister() {
+  const nama = document.getElementById('regNama').value;
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPass').value;
+  const no_hp = document.getElementById('regHp').value;
+  if (!nama || !email || !password) return showAlert('registerAlert','Semua field wajib diisi');
+  const res = await api('/api/auth/register', { method:'POST', body: JSON.stringify({nama,email,password,no_hp}) });
+  const data = await res.json();
+  if (!res.ok) return showAlert('registerAlert', data.error || 'Registrasi gagal');
+  showAlert('registerAlert','Registrasi berhasil! Silakan masuk.','success');
+  setTimeout(() => { closeModal('registerModal'); openModal('loginModal'); }, 1500);
+}
+
+// ─── Login ─────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPass').value;
+  const res = await api('/api/auth/login', { method:'POST', body: JSON.stringify({email,password}) });
+  const data = await res.json();
+  if (!res.ok) return showAlert('loginAlert', data.error || 'Login gagal');
+  token = data.token; user = data.user;
+  localStorage.setItem('sehatku_token', token);
+  localStorage.setItem('sehatku_user', JSON.stringify(user));
+  closeModal('loginModal');
+  updateNav();
+  showMain();
+}
+
+// ─── Load Puskesmas ─────────────────────────────────────────────────────────
+async function loadPuskesmas() {
+  const res = await api('/api/puskesmas');
+  const list = await res.json();
+  const sel = document.getElementById('bookPuskesmas');
+  sel.innerHTML = '<option value="">-- Pilih Puskesmas --</option>';
+  list.forEach(p => sel.innerHTML += `<option value="${p.id}">${p.nama} (${p.kecamatan})</option>`);
+}
+
+// ─── Booking ───────────────────────────────────────────────────────────────
+async function doBooking() {
+  const puskesmas_id = document.getElementById('bookPuskesmas').value;
+  const tanggal = document.getElementById('bookTanggal').value;
+  const jenis_layanan = document.getElementById('bookLayanan').value;
+  const keluhan = document.getElementById('bookKeluhan').value;
+  if (!puskesmas_id || !tanggal || !keluhan) return showAlert('bookingAlert','Semua field wajib diisi');
+  const res = await api('/api/booking', { method:'POST', body: JSON.stringify({puskesmas_id,tanggal,keluhan,jenis_layanan}) });
+  const data = await res.json();
+  if (!res.ok) return showAlert('bookingAlert', data.error);
+  showAlert('bookingAlert','Booking berhasil! Nomor booking: #'+data.id,'success');
+  setTimeout(() => { closeModal('bookingModal'); loadMyBookings(); }, 1500);
+}
+
+async function loadMyBookings() {
+  const el = document.getElementById('myBookings');
+  el.innerHTML = '<div class="spinner"></div>';
+  const res = await api('/api/booking/saya');
+  const list = await res.json();
+  if (!list.length) { el.innerHTML = '<div class="card" style="text-align:center;padding:40px"><p style="color:var(--slate-mid)">Belum ada booking. Buat booking pertama Anda!</p></div>'; return; }
+  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>No</th><th>Puskesmas</th><th>Tanggal</th><th>Layanan</th><th>Keluhan</th><th>Status</th></tr></thead><tbody>
+    ${list.map((b,i) => `<tr><td>${i+1}</td><td><strong>${b.puskesmas_nama}</strong><br><small style="color:var(--slate-mid)">${b.alamat||''}</small></td>
+    <td>${new Date(b.tanggal).toLocaleDateString('id-ID')}</td><td>${b.jenis_layanan||'-'}</td>
+    <td>${b.keluhan}</td><td><span class="badge badge-${b.status}">${b.status}</span></td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+// ─── Laporan ───────────────────────────────────────────────────────────────
+async function doLaporan() {
+  const judul = document.getElementById('lapJudul').value;
+  const deskripsi = document.getElementById('lapDeskripsi').value;
+  const lokasi = document.getElementById('lapLokasi').value;
+  const kategori = document.getElementById('lapKategori').value;
+  const foto = document.getElementById('lapFoto').files[0];
+  if (!judul || !deskripsi) return showAlert('laporanAlert','Judul dan deskripsi wajib diisi');
+  const fd = new FormData();
+  fd.append('judul', judul); fd.append('deskripsi', deskripsi);
+  fd.append('lokasi', lokasi); fd.append('kategori', kategori);
+  if (foto) fd.append('foto', foto);
+  const res = await api('/api/laporan', { method:'POST', body: fd });
+  const data = await res.json();
+  if (!res.ok) return showAlert('laporanAlert', data.error);
+  showAlert('laporanAlert','Laporan berhasil dikirim! ID: #'+data.id,'success');
+  setTimeout(() => { closeModal('laporanModal'); loadLaporan(); }, 1500);
+}
+
+async function loadLaporan() {
+  const el = document.getElementById('laporanList');
+  el.innerHTML = '<div class="spinner"></div>';
+  const res = await api('/api/laporan');
+  const list = await res.json();
+  if (!list.length) { el.innerHTML = '<p style="color:var(--slate-mid)">Belum ada laporan.</p>'; return; }
+  el.innerHTML = `<div class="card-grid">${list.map(l => `
+    <div class="card">
+      ${l.foto_url ? `<img src="${l.foto_url}" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px" loading="lazy"/>` : ''}
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+        <span class="badge badge-${l.status}">${l.status}</span>
+        <span style="font-size:.75rem;background:#f1f5f9;padding:2px 8px;border-radius:100px;font-weight:600">${l.kategori}</span>
+      </div>
+      <h3 style="font-size:1rem">${l.judul}</h3>
+      <p style="margin:6px 0">${l.deskripsi.substring(0,120)}${l.deskripsi.length>120?'...':''}</p>
+      <p style="font-size:.8rem;color:var(--slate-mid);margin-top:8px">📍 ${l.lokasi||'Tidak disebutkan'} &nbsp;·&nbsp; 👤 ${l.pelapor}</p>
+    </div>`).join('')}</div>`;
+}
+
+// ─── Monitoring ────────────────────────────────────────────────────────────
+async function loadMonitoring() {
+  const el = document.getElementById('monitoringData');
+  el.innerHTML = '<div class="spinner"></div>';
+  const res = await api('/api/monitoring');
+  const list = await res.json();
+  const maxKasus = Math.max(...list.map(m => m.jumlah_kasus), 1);
+  el.innerHTML = `
+    <div class="card" style="margin-bottom:20px">
+      <div class="chart-bar-wrap">${list.slice(0,10).map(m => `
+        <div class="chart-bar-row">
+          <div class="chart-bar-label">${m.penyakit}</div>
+          <div class="chart-bar-track">
+            <div class="chart-bar-fill" style="width:${(m.jumlah_kasus/maxKasus*100).toFixed(0)}%">${m.jumlah_kasus}</div>
+          </div>
+          <span style="font-size:.8rem;color:var(--slate-mid);width:90px;flex-shrink:0">${m.wilayah}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Penyakit</th><th>Kasus</th><th>Wilayah</th><th>Tanggal</th><th>Keterangan</th></tr></thead>
+    <tbody>${list.map(m => `<tr>
+      <td><strong>${m.penyakit}</strong></td>
+      <td><span style="font-weight:700;color:${m.jumlah_kasus>20?'var(--red)':'var(--green)'}">${m.jumlah_kasus}</span></td>
+      <td>${m.wilayah}</td>
+      <td>${new Date(m.tanggal).toLocaleDateString('id-ID')}</td>
+      <td>${m.keterangan||'-'}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+async function doAddMonitoring() {
+  const penyakit = document.getElementById('monPenyakit').value;
+  const jumlah_kasus = document.getElementById('monJumlah').value;
+  const wilayah = document.getElementById('monWilayah').value;
+  const tanggal = document.getElementById('monTanggal').value;
+  const keterangan = document.getElementById('monKeterangan').value;
+  if (!penyakit || !jumlah_kasus || !wilayah || !tanggal) return showAlert('monitoringAlert','Semua field wajib diisi');
+  const res = await api('/api/monitoring', { method:'POST', body: JSON.stringify({penyakit,jumlah_kasus,wilayah,tanggal,keterangan}) });
+  const data = await res.json();
+  if (!res.ok) return showAlert('monitoringAlert', data.error);
+  showAlert('monitoringAlert','Data monitoring berhasil ditambahkan!','success');
+  setTimeout(() => closeModal('monitoringModal'), 1500);
+}
+
+// ─── Admin ─────────────────────────────────────────────────────────────────
+async function loadAdminBookings() {
+  const el = document.getElementById('adminBookings');
+  el.innerHTML = '<div class="spinner"></div>';
+  const res = await api('/api/admin/booking');
+  const list = await res.json();
+  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>#</th><th>Pasien</th><th>Puskesmas</th><th>Tanggal</th><th>Keluhan</th><th>Status</th><th>Aksi</th></tr></thead>
+  <tbody>${list.map(b => `<tr>
+    <td>${b.id}</td>
+    <td><strong>${b.nama_pasien}</strong><br><small>${b.no_hp||''}</small></td>
+    <td>${b.puskesmas_nama}</td>
+    <td>${new Date(b.tanggal).toLocaleDateString('id-ID')}</td>
+    <td>${b.keluhan.substring(0,60)}</td>
+    <td><span class="badge badge-${b.status}">${b.status}</span></td>
+    <td><select onchange="updateStatus(${b.id},this.value)" style="border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:.8rem">
+      <option value="">Ubah...</option>
+      <option value="dikonfirmasi">Konfirmasi</option>
+      <option value="selesai">Selesai</option>
+      <option value="dibatalkan">Batalkan</option>
+    </select></td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+async function updateStatus(id, status) {
+  if (!status) return;
+  await api('/api/admin/booking/'+id, { method:'PATCH', body: JSON.stringify({status}) });
+  loadAdminBookings();
+}
+
+// ─── Init ───────────────────────────────────────────────────────────────────
+updateNav();
+if (user && token) showMain();
+// Pre-fill today date
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date().toISOString().split('T')[0];
+  ['bookTanggal','monTanggal'].forEach(id => { const el = document.getElementById(id); if(el) el.value = today; });
+});
+// Load puskesmas on booking modal open
+document.getElementById('bookingModal').addEventListener('click', () => {
+  const sel = document.getElementById('bookPuskesmas');
+  if (sel.options.length <= 1) loadPuskesmas();
+});
+</script>
+</body>
+</html>

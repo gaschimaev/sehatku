@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: sehatku-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - sehatku-net
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: sehatku-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DB_NAME=${DB_NAME}
+      - AWS_REGION=${AWS_REGION}
+      - S3_BUCKET=${S3_BUCKET}
+      - JWT_SECRET=${JWT_SECRET}
+      - NODE_ENV=production
+    networks:
+      - sehatku-net
+    restart: unless-stopped
+
+networks:
+  sehatku-net:
+    driver: bridge
